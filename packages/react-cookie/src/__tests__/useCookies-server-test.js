@@ -38,7 +38,8 @@ describe('useCookies', () => {
 
     it('does not track changes', () => {
       const cookies = new Cookies('test="big fat cat"');
-      jest.spyOn(React, 'useLayoutEffect');
+
+      const addChangeListenerSpy = jest.spyOn(cookies, 'addChangeListener');
 
       ReactDOMServer.renderToString(
         <CookiesProvider cookies={cookies}>
@@ -46,7 +47,7 @@ describe('useCookies', () => {
         </CookiesProvider>,
       );
 
-      expect(React.useLayoutEffect).not.toHaveBeenCalled();
+      expect(addChangeListenerSpy).not.toHaveBeenCalled();
     });
   });
 });

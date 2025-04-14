@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect, useState, useRef, useMemo } from 'react';
+import { useContext, useLayoutEffect, useState, useMemo } from 'react';
 import { Cookie, CookieSetOptions, CookieGetOptions } from 'universal-cookie';
 import CookiesContext from './CookiesContext';
 import { isInBrowser } from './utils';
@@ -22,27 +22,29 @@ export default function useCookies<T extends string, U = { [K in T]?: any }>(
 
   const [allCookies, setCookies] = useState(() => cookies.getAll(getOptions));
 
-  if (isInBrowser()) {
-    useLayoutEffect(() => {
-      function onChange() {
-        if (!cookies) {
-          throw new Error('Missing <CookiesProvider>');
-        }
+  const isInBrowserEnv = isInBrowser();
 
-        const newCookies = cookies.getAll(getOptions);
+  useLayoutEffect(() => {
+    if (!isInBrowserEnv) return;
 
-        if (shouldUpdate(dependencies || null, newCookies, allCookies)) {
-          setCookies(newCookies);
-        }
+    function onChange() {
+      if (!cookies) {
+        throw new Error('Missing <CookiesProvider>');
       }
 
-      cookies.addChangeListener(onChange);
+      const newCookies = cookies.getAll(getOptions);
 
-      return () => {
-        cookies.removeChangeListener(onChange);
-      };
-    }, [cookies, allCookies]);
-  }
+      if (shouldUpdate(dependencies || null, newCookies, allCookies)) {
+        setCookies(newCookies);
+      }
+    }
+
+    cookies.addChangeListener(onChange);
+
+    return () => {
+      cookies.removeChangeListener(onChange);
+    };
+  }, [cookies, allCookies, isInBrowserEnv]);
 
   const setCookie = useMemo(() => cookies.set.bind(cookies), [cookies]);
   const removeCookie = useMemo(() => cookies.remove.bind(cookies), [cookies]);

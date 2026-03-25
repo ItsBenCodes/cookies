@@ -27,7 +27,7 @@
     "@testing-library/react": "^16.3.0",
     "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.19.15",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@types/testing-library__dom": "^7.5.0",

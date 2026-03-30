@@ -7,5 +7,6 @@ export interface AppRequest extends Request {
 
 export interface CookieValues {
   name?: string;
+  cookieConsent?: 'accepted' | 'declined';
   [key: string]: any;
 }

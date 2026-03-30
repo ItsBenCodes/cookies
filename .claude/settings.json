@@ -1,0 +1,10 @@
+{
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
+}

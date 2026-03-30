@@ -4,7 +4,7 @@ import { ReactCookieProps } from './types';
 
 import { Provider } from './CookiesContext';
 
-const CookiesProvider: React.FC<ReactCookieProps> = (props) => {
+const CookiesProvider = (props: ReactCookieProps) => {
   const cookies = React.useMemo(() => {
     if (props.cookies) {
       return props.cookies;

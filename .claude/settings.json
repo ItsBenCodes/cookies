@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": ["Bash(yarn:*)"]
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
+}

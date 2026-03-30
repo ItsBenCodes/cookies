@@ -2,6 +2,7 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { CookieValues } from '../types';
 import NameForm from './NameForm';
+import CookieBanner from './CookieBanner';
 
 export default function App(): React.ReactElement {
   const [cookies, setCookie, removeCookie] = useCookies<'name', CookieValues>([
@@ -20,6 +21,14 @@ export default function App(): React.ReactElement {
     removeCookie('name');
   }
 
+  function handleAcceptCookies(): void {
+    console.log('Cookies accepted');
+  }
+
+  function handleDeclineCookies(): void {
+    console.log('Cookies declined');
+  }
+
   return (
     <div>
       <NameForm name={cookies.name || ''} onChange={onChange} />
@@ -30,6 +39,11 @@ export default function App(): React.ReactElement {
         External Call
       </button>
       {cookies.name && <h1>Hello {cookies.name}!</h1>}
+
+      <CookieBanner
+        onAccept={handleAcceptCookies}
+        onDecline={handleDeclineCookies}
+      />
     </div>
   );
 }

@@ -26,10 +26,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bendotcodes/cookies.git"
+    "url": "https://github.com/ItsBenCodes/cookies.git"
   },
-  "bugs": "https://github.com/bendotcodes/cookies/issues",
-  "homepage": "https://github.com/bendotcodes/cookies/tree/main/packages/universal-cookie-express#readme",
+  "bugs": "https://github.com/ItsBenCodes/cookies/issues",
+  "homepage": "https://github.com/ItsBenCodes/cookies/tree/main/packages/universal-cookie-express#readme",
   "keywords": [
     "universal",
     "isomophic",
@@ -47,8 +47,8 @@
     "universal-cookie": "^8.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.27.0",
-    "rimraf": "^6.0.1",
-    "typescript": "^5.8.3"
+    "@babel/cli": "^7.28.6",
+    "rimraf": "^6.1.3",
+    "typescript": "^5.8.2"
   }
 }

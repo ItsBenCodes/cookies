@@ -8,7 +8,7 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./esm/index.d.mts",
+        "types": "./esm/index.d.ts",
         "default": "./esm/index.mjs"
       },
       "require": {
@@ -41,8 +41,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf esm && rimraf cjs && rimraf umd",
-    "build": "rollup -c",
-    "postbuild": "node ../../tools/fix-typescript-typedef.mjs ./esm"
+    "build": "rollup -c"
   },
   "dependencies": {
     "@types/hoist-non-react-statics": "^3.3.7",

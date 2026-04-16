@@ -1,7 +1,10 @@
-import { useContext, useLayoutEffect, useState, useMemo } from 'react';
+import { useContext, useEffect, useLayoutEffect, useState, useMemo } from 'react';
 import { Cookie, CookieSetOptions, CookieGetOptions } from 'universal-cookie';
 import CookiesContext from './CookiesContext';
 import { isInBrowser } from './utils';
+
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export default function useCookies<T extends string, U = { [K in T]?: any }>(
   dependencies?: T[],
@@ -24,7 +27,7 @@ export default function useCookies<T extends string, U = { [K in T]?: any }>(
 
   const isInBrowserEnv = isInBrowser();
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!isInBrowserEnv) return;
 
     function onChange() {

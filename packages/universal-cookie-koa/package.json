@@ -1,6 +1,6 @@
 {
   "name": "universal-cookie-koa",
-  "version": "8.1.1",
+  "version": "8.1.2",
   "description": "Hook cookies get/set on Koa for server-rendering",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",

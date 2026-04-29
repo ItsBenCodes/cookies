@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ItsBenCodes/cookies.git"
+    "url": "git+https://github.com/ItsBenCodes/cookies.git"
   },
   "bugs": "https://github.com/ItsBenCodes/cookies/issues",
   "homepage": "https://github.com/ItsBenCodes/cookies/tree/main/packages/universal-cookie#readme",

@@ -8,6 +8,7 @@
     "excludedCommands": [
       "npx playwright *",
       "git commit *",
+      "git tag *",
       "gh *",
       "npm install",
       "npm install *"

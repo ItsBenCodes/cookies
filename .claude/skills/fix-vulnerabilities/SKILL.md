@@ -1,6 +1,6 @@
 ---
 name: fix-vulnerabilities
-description: Triage and fix dependency vulnerabilities in a yarn project. Use when the user asks to fix, address, or patch dependency/dependabot/yarn audit vulnerabilities.
+description: Triage and fix dependency vulnerabilities in an npm project. Use when the user asks to fix, address, or patch dependency/dependabot/npm audit vulnerabilities.
 ---
 
 # Fix Vulnerabilities
@@ -32,13 +32,13 @@ Also check code scanning (often catches CI/workflow issues that audit misses):
 gh api repos/<owner>/<repo>/code-scanning/alerts --paginate -q '.[] | select(.state=="open")'
 ```
 
-## 4. Run yarn audit
+## 4. Run npm audit
 
 ```bash
-yarn npm audit --recursive --json
+npm audit --json
 ```
 
-Treat **deprecation notices** (e.g. `inflight`, `whatwg-encoding`, "Old versions of glob are not supported") as informational — they have no patched version and can't be "fixed" without replacing the upstream caller. Note them in the PR body and move on.
+`npm audit` walks workspaces by default. Treat **deprecation notices** (e.g. `inflight`, `whatwg-encoding`, "Old versions of glob are not supported") as informational — they have no patched version and can't be "fixed" without replacing the upstream caller. Note them in the PR body and move on.
 
 ## 5. Fix in priority order
 
@@ -47,52 +47,50 @@ For each vulnerability, try in order:
 1. **Bump the direct dependency.** Check both root `package.json` AND every workspace `package.json` (`packages/*/package.json`) — the vulnerable transitive may be reachable through a workspace. If a direct dep can be bumped to a version whose transitives no longer carry the vuln, do that:
 
    ```bash
-   yarn up <pkg>@<safe-version>
+   npm install <pkg>@<safe-version>
+   # or for a workspace:
+   npm install <pkg>@<safe-version> -w <workspace-name>
    ```
 
    Always verify against `npm view <pkg> version` — if every direct dep is already at latest and the vuln persists, no direct bump can fix it.
 
-2. **Add a `resolutions` entry** for transitives with no direct-bump path. **Yarn 4 syntax has sharp edges:**
-   - Flat keys (`"pkg": "version"`) override every instance — only use when one safe version works for all callers.
-   - Range-pattern keys **must** use the `npm:` protocol prefix AND match descriptors that actually appear in `yarn.lock`. `"minimatch@^3.0.0": "..."` is silently ignored; `"minimatch@npm:^3.1.1": "..."` works.
-   - Find the real descriptors first:
-     ```bash
-     grep -E '^"<pkg>@' yarn.lock
-     ```
-   - When a package has multiple incompatible major lines in the tree (e.g. minimatch 3.x and 9.x have different APIs), pin each line **separately** — a single flat pin will break callers.
+2. **Add an `overrides` entry** in the root `package.json` for transitives with no direct-bump path:
+   - Flat keys (`"pkg": "version"`) override every instance — only safe when one version works for all callers.
+   - **When a package has multiple incompatible major lines in the tree** (e.g. minimatch 3.x and 9.x have different APIs), use range-keyed overrides — `"pkg@<major>": "<version>"` — so each major line is pinned separately. A single flat pin will silently force older callers onto an incompatible API and break the build.
+   - npm overrides are nested-friendly: see `npm help package-json` for parent-scoped overrides if a flat or range-keyed key is too broad.
 
    Example block from this repo:
 
    ```json
-   "resolutions": {
+   "overrides": {
      "tar": "^7.5.11",
-     "minimatch@npm:^3.1.1": "^3.1.4",
-     "minimatch@npm:^9.0.4": "^9.0.9"
+     "minimatch@3": "^3.1.4",
+     "minimatch@9": "^9.0.7"
    }
    ```
 
-   Then `yarn install` and confirm the resolution step output mentions the bumped versions — if it doesn't, the pattern didn't match.
+   Then `npm install` and confirm with `npm ls <pkg>` that each major resolves to the pinned version.
 
 3. **No fix available** — leave it and note it in the PR body.
 
-Re-run `yarn npm audit --recursive` after each change.
+Re-run `npm audit` after each change.
 
 ## 6. Verify
 
 Run the following commands — fix any failure before committing:
 
 ```bash
-yarn format
-yarn build
-yarn size
-yarn test
+npm run format
+npm run build
+npm run size
+npm test
 npx playwright install --with-deps
 npx playwright test
 ```
 
-Resolutions can break callers expecting older APIs (especially across major versions). Tests alone aren't enough — build pipelines (rollup, webpack, babel) often hit the bumped transitives at compile time.
+Overrides can break callers expecting older APIs (especially across major versions). Tests alone aren't enough — build pipelines (rollup, webpack, babel) often hit the bumped transitives at compile time.
 
-**If a bump/resolution breaks the build and the incompatibility can't be reconciled** (caller depends on a removed API, peer-dep conflict between two libs, etc.), **roll back that specific change** — revert the `yarn up` or remove the offending `resolutions` entry, run `yarn install`, and move it to the "Unfixed" section of the PR body with a one-line reason. Do not commit a broken build.
+**If a bump/override breaks the build and the incompatibility can't be reconciled** (caller depends on a removed API, peer-dep conflict between two libs, etc.), **roll back that specific change** — revert the `npm install` or remove the offending `overrides` entry, run `npm install`, and move it to the "Unfixed" section of the PR body with a one-line reason. Do not commit a broken build.
 
 ## 7. Commit, push, open PR
 
@@ -104,7 +102,7 @@ git commit -m "fix: patch dependency vulnerabilities"
 git push -u origin HEAD
 gh pr create --title "fix: patch dependency vulnerabilities" --body "$(cat <<'EOF'
 ## Fixed
-- <pkg>: <old> → <new> (direct bump / resolution)
+- <pkg>: <old> → <new> (direct bump / override)
 
 ## Unfixed (no patch available)
 - <pkg> (<severity>): <summary>

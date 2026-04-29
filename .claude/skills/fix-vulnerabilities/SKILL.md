@@ -77,35 +77,18 @@ Re-run `npm audit` after each change.
 
 ## 6. Verify
 
-Run the following commands — fix any failure before committing:
-
-```bash
-npm run format
-npm run build
-npm run size
-npm test
-npx playwright install --with-deps
-npx playwright test
-```
-
-Overrides can break callers expecting older APIs (especially across major versions). Tests alone aren't enough — build pipelines (rollup, webpack, babel) often hit the bumped transitives at compile time.
+Use the `validate` skill. Overrides can break callers expecting older APIs (especially across major versions). Tests alone aren't enough — build pipelines (rollup, webpack, babel) often hit the bumped transitives at compile time.
 
 **If a bump/override breaks the build and the incompatibility can't be reconciled** (caller depends on a removed API, peer-dep conflict between two libs, etc.), **roll back that specific change** — revert the `npm install` or remove the offending `overrides` entry, run `npm install`, and move it to the "Unfixed" section of the PR body with a one-line reason. Do not commit a broken build.
 
 ## 7. Commit, push, open PR
 
-Commit with **no co-author trailer**:
+Use the `commit` skill with title `fix: patch dependency vulnerabilities` and body:
 
-```bash
-git add -A
-git commit -m "fix: patch dependency vulnerabilities"
-git push -u origin HEAD
-gh pr create --title "fix: patch dependency vulnerabilities" --body "$(cat <<'EOF'
+```
 ## Fixed
 - <pkg>: <old> → <new> (direct bump / override)
 
 ## Unfixed (no patch available)
 - <pkg> (<severity>): <summary>
-EOF
-)"
 ```

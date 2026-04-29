@@ -4,7 +4,8 @@
   },
   "sandbox": {
     "enabled": true,
-    "autoAllowBashIfSandboxed": true
+    "autoAllowBashIfSandboxed": true,
+    "excludedCommands": ["npx playwright *", "git commit *", "gh *"]
   },
   "attribution": {
     "commit": "",

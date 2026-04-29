@@ -59,33 +59,18 @@ Remove any `overrides` entries that are now redundant (the direct dep already ca
 
 ## 6. Verify
 
-Run after every group; fix failures before moving on:
-
-```bash
-npm run format
-npm run build
-npm run size
-npm test
-npx playwright install --with-deps
-npx playwright test
-```
+Use the `validate` skill after every group; fix failures before moving on.
 
 **If a major bump breaks the build and the migration is non-trivial**, roll back that specific upgrade (`npm install <pkg>@<previous>`), note it in the PR body under "Deferred", and keep moving. Do not commit a broken build.
 
 ## 7. Commit, push, open PR
 
-Commit with **no co-author trailer**:
+Use the `commit` skill with title `chore: upgrade dependencies` and body:
 
-```bash
-git add -A
-git commit -m "chore: upgrade dependencies"
-git push -u origin HEAD
-gh pr create --title "chore: upgrade dependencies" --body "$(cat <<'EOF'
+```
 ## Upgraded
 - <pkg>: <old> → <new>
 
 ## Deferred (breaking, needs follow-up)
 - <pkg> <old> → <new>: <reason>
-EOF
-)"
 ```

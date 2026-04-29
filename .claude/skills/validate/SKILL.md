@@ -12,7 +12,7 @@ npm run format
 npm run build
 npm run size
 npm test
-npx playwright install --with-deps
+npx playwright install
 npx playwright test
 ```
 

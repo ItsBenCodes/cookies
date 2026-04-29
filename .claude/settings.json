@@ -5,7 +5,13 @@
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
-    "excludedCommands": ["npx playwright *", "git commit *", "gh *"]
+    "excludedCommands": [
+      "npx playwright *",
+      "git commit *",
+      "gh *",
+      "npm install",
+      "npm install *"
+    ]
   },
   "attribution": {
     "commit": "",

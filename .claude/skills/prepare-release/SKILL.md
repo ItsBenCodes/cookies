@@ -89,17 +89,16 @@ Verify with `grep -H '"version"' packages/*/package.json`.
 
 ## 7. Commit, push, open PR with auto-merge
 
-Commit with **no co-author trailer**. Match prior style (`Bump to vX.Y.Z`). Build a PR body that lists each bumped package:
+Use the `commit` skill. Stage only `packages/*/package.json`. Title `Bump to v$RELEASE_VERSION`. Body lists each bumped package:
+
+```
+Release v$RELEASE_VERSION
+
+- <pkg> -> <new-version>
+```
+
+After PR is open, enable auto-merge:
 
 ```bash
-BODY="Release v$RELEASE_VERSION"$'\n\n'
-for pkg in "${CHANGED[@]}"; do
-  BODY+="- $pkg -> ${NEW_VERSIONS[$pkg]}"$'\n'
-done
-
-git add packages/*/package.json
-git commit -m "Bump to v$RELEASE_VERSION"
-git push -u origin HEAD
-gh pr create --title "Bump to v$RELEASE_VERSION" --body "$BODY"
 gh pr merge --auto --squash
 ```

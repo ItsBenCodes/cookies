@@ -1,3 +1,5 @@
+import { useEffect, useLayoutEffect } from 'react';
+
 export function isInBrowser() {
   return (
     typeof window !== 'undefined' &&
@@ -5,3 +7,7 @@ export function isInBrowser() {
     typeof window.document.createElement !== 'undefined'
   );
 }
+
+export const useIsomorphicLayoutEffect = isInBrowser()
+  ? useLayoutEffect
+  : useEffect;

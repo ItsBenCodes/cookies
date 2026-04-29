@@ -36,8 +36,10 @@ git rev-parse "v$VERSION" >/dev/null 2>&1 && { echo "Tag v$VERSION already exist
 
 ## 3. Tag, push, release
 
+Always create an annotated tag with a message (some local configs enable `tag.gpgsign`, which makes a plain `git tag NAME` fail without a message):
+
 ```bash
-git tag "v$VERSION"
+git tag -a "v$VERSION" -m "v$VERSION"
 git push origin "v$VERSION"
 gh release create "v$VERSION" --title "v$VERSION" --generate-notes
 ```

@@ -30,7 +30,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'yarn --cwd packages/react-cookie-demo start',
+    command: 'npm start -w react-cookie-demo',
     url: 'http://localhost:8080',
     reuseExistingServer: !process.env.CI,
   },

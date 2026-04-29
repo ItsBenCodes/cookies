@@ -21,17 +21,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22.14.0'
-          cache: yarn
+          cache: npm
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Enable Yarn 4
-        run: corepack enable
-
       - name: Install dependencies
-        run: yarn
+        run: npm ci
 
       - name: Build
-        run: yarn build
+        run: npm run build
 
       - name: Upgrade npm for trusted publishing
         run: npm install -g npm@latest

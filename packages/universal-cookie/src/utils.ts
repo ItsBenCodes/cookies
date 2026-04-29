@@ -3,9 +3,9 @@ import { Cookie, CookieGetOptions } from './types';
 
 export function hasDocumentCookie() {
   const testingValue =
-    typeof global === 'undefined'
+    typeof globalThis === 'undefined'
       ? undefined
-      : (global as any).TEST_HAS_DOCUMENT_COOKIE;
+      : (globalThis as any).TEST_HAS_DOCUMENT_COOKIE;
 
   if (typeof testingValue === 'boolean') {
     return testingValue;

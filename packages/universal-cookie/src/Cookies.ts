@@ -12,7 +12,7 @@ export default class Cookies {
   private cookies: { [name: string]: Cookie };
   private defaultSetOptions: CookieSetOptions;
   private changeListeners: CookieChangeListener[] = [];
-  private pollingInterval?: NodeJS.Timeout;
+  private pollingInterval?: ReturnType<typeof setInterval>;
 
   private HAS_DOCUMENT_COOKIE: boolean = false;
 

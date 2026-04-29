@@ -13,9 +13,9 @@
     "@babel/register": "^7.28.6",
     "express": "^5.2.1",
     "react": "^19.2.4",
-    "react-cookie": "^7.0.0",
+    "react-cookie": "^8.1.1",
     "react-dom": "^19.2.4",
-    "universal-cookie-express": "^7.0.0"
+    "universal-cookie-express": "^8.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",

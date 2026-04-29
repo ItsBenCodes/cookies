@@ -22,25 +22,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22.14.0'
-          cache: yarn
-
-      - name: Enable Yarn 4
-        run: corepack enable
+          cache: npm
 
       - name: Install dependencies
-        run: yarn
+        run: npm ci
 
       - name: Check formatting
-        run: yarn format
+        run: npm run format
 
       - name: Build
-        run: yarn build
+        run: npm run build
 
       - name: Check bundle size
-        run: yarn size
+        run: npm run size
 
       - name: Run tests
-        run: yarn test
+        run: npm test
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps

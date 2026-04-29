@@ -1,2 +1,2 @@
 npx lint-staged
-yarn test
+npm test

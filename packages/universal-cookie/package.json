@@ -1,6 +1,6 @@
 {
   "name": "universal-cookie",
-  "version": "8.1.0",
+  "version": "8.1.1",
   "description": "Universal cookies for JavaScript",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",

@@ -2,6 +2,7 @@ name: Publish
 
 permissions:
   contents: read
+  id-token: write
 
 on:
   release:
@@ -11,9 +12,6 @@ jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
-
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -35,18 +33,45 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest
+
       - name: Publish universal-cookie to NPM
         working-directory: ./packages/universal-cookie
-        run: npm publish
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "universal-cookie@$VERSION" version >/dev/null 2>&1; then
+            echo "universal-cookie@$VERSION already published, skipping"
+          else
+            npm publish --provenance --access public
+          fi
 
       - name: Publish react-cookie to NPM
         working-directory: ./packages/react-cookie
-        run: npm publish
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "react-cookie@$VERSION" version >/dev/null 2>&1; then
+            echo "react-cookie@$VERSION already published, skipping"
+          else
+            npm publish --provenance --access public
+          fi
 
       - name: Publish universal-cookie-express to NPM
         working-directory: ./packages/universal-cookie-express
-        run: npm publish
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "universal-cookie-express@$VERSION" version >/dev/null 2>&1; then
+            echo "universal-cookie-express@$VERSION already published, skipping"
+          else
+            npm publish --provenance --access public
+          fi
 
       - name: Publish universal-cookie-koa to NPM
         working-directory: ./packages/universal-cookie-koa
-        run: npm publish
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "universal-cookie-koa@$VERSION" version >/dev/null 2>&1; then
+            echo "universal-cookie-koa@$VERSION already published, skipping"
+          else
+            npm publish --provenance --access public
+          fi

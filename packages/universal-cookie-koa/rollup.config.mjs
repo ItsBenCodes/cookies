@@ -1,5 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
 import babel from '@rollup/plugin-babel';
+import dts from 'rollup-plugin-dts';
 
 const external = ['react', 'universal-cookie'];
 const globals = {
@@ -15,7 +16,7 @@ export default [
       format: 'esm',
       entryFileNames: '[name].mjs',
     },
-    plugins: [typescript({ outDir: './esm' })],
+    plugins: [typescript({ outDir: './esm', declaration: false })],
     external,
   },
   {
@@ -29,5 +30,11 @@ export default [
       babel({ babelHelpers: 'bundled' }),
     ],
     external,
+  },
+  {
+    input: 'src/index.ts',
+    output: { file: 'esm/index.d.mts', format: 'esm' },
+    external: ['universal-cookie', 'koa'],
+    plugins: [dts()],
   },
 ];

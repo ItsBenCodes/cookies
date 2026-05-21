@@ -3,6 +3,7 @@ import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import babel from '@rollup/plugin-babel';
+import dts from 'rollup-plugin-dts';
 
 export default [
   {
@@ -12,7 +13,11 @@ export default [
       format: 'esm',
       entryFileNames: '[name].mjs',
     },
-    plugins: [resolve(), commonjs(), typescript({ outDir: './esm' })],
+    plugins: [
+      resolve(),
+      commonjs(),
+      typescript({ outDir: './esm', declaration: false }),
+    ],
     external: [], // cookie library is not ESM compatible so we transform it
   },
   {
@@ -46,5 +51,11 @@ export default [
     },
     plugins: [resolve(), commonjs(), typescript({ outDir: './umd' }), terser()],
     external: [], // cookie library is not UMD compatible so we transform it
+  },
+  {
+    input: 'src/index.ts',
+    output: { file: 'esm/index.d.mts', format: 'esm' },
+    external: ['cookie'],
+    plugins: [dts()],
   },
 ];

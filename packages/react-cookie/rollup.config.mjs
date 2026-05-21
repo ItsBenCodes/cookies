@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import babel from '@rollup/plugin-babel';
+import dts from 'rollup-plugin-dts';
 
 const external = ['react', 'universal-cookie'];
 const globals = {
@@ -19,7 +20,11 @@ export default [
       format: 'esm',
       entryFileNames: '[name].mjs',
     },
-    plugins: [resolve(), commonjs(), typescript({ outDir: './esm' })],
+    plugins: [
+      resolve(),
+      commonjs(),
+      typescript({ outDir: './esm', declaration: false }),
+    ],
     external,
   },
   {
@@ -72,5 +77,11 @@ export default [
       terser(),
     ],
     external,
+  },
+  {
+    input: 'src/index.ts',
+    output: { file: 'esm/index.d.mts', format: 'esm' },
+    external: ['react', 'universal-cookie', 'hoist-non-react-statics'],
+    plugins: [dts()],
   },
 ];

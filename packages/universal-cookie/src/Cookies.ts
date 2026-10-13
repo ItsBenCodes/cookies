@@ -28,8 +28,8 @@ export default class Cookies {
   }
 
   private _emitChange(params: CookieChangeOptions) {
-    for (let i = 0; i < this.changeListeners.length; ++i) {
-      this.changeListeners[i](params);
+    for (const listener of [...this.changeListeners]) {
+      listener(params);
     }
   }
 

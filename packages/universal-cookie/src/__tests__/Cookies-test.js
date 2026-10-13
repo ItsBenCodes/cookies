@@ -248,6 +248,30 @@ describe('Cookies', () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
+    it('notifies remaining listeners when a listener unsubscribes itself', () => {
+      const cookies = new Cookies();
+      const onChange = jest.fn(() => cookies.removeChangeListener(onChange));
+      const nextListener = jest.fn();
+      cookies.addChangeListener(onChange);
+      cookies.addChangeListener(nextListener);
+
+      cookies.set('test', 'value');
+
+      expect(nextListener).toHaveBeenCalledTimes(1);
+      cookies.removeAllChangeListeners();
+    });
+
+    it('does not notify listeners added during the current change', () => {
+      const cookies = new Cookies();
+      const nextListener = jest.fn();
+      cookies.addChangeListener(() => cookies.addChangeListener(nextListener));
+
+      cookies.set('test', 'value');
+
+      expect(nextListener).not.toHaveBeenCalled();
+      cookies.removeAllChangeListeners();
+    });
+
     it('removes all listeners at once', () => {
       const cookies = new Cookies();
 

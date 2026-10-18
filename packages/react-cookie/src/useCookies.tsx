@@ -1,4 +1,4 @@
-import { useContext, useState, useMemo } from 'react';
+import { useContext, useState, useMemo, useRef } from 'react';
 import { Cookie, CookieSetOptions, CookieGetOptions } from 'universal-cookie';
 import CookiesContext from './CookiesContext';
 import { useIsomorphicLayoutEffect } from './utils';
@@ -21,6 +21,13 @@ export default function useCookies<T extends string, U = { [K in T]?: any }>(
   const getOptions: CookieGetOptions = { ...defaultOptions, ...options };
 
   const [allCookies, setCookies] = useState(() => cookies.getAll(getOptions));
+  const previousCookies = useRef<Record<string, unknown> | null>(null);
+  if (previousCookies.current === null) {
+    previousCookies.current = cookies.getAll({
+      ...getOptions,
+      doNotParse: true,
+    });
+  }
 
   useIsomorphicLayoutEffect(() => {
     function onChange() {
@@ -28,10 +35,13 @@ export default function useCookies<T extends string, U = { [K in T]?: any }>(
         throw new Error('Missing <CookiesProvider>');
       }
 
-      const newCookies = cookies.getAll(getOptions);
+      const newCookies = cookies.getAll({ ...getOptions, doNotParse: true });
 
-      if (shouldUpdate(dependencies || null, newCookies, allCookies)) {
-        setCookies(newCookies);
+      if (
+        shouldUpdate(dependencies || null, newCookies, previousCookies.current)
+      ) {
+        previousCookies.current = newCookies;
+        setCookies(cookies.getAll(getOptions));
       }
     }
 

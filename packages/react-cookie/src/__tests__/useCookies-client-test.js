@@ -153,6 +153,48 @@ describe('useCookies', () => {
       expect(screen.getByText('big fat cat Pacman')).toBeInTheDocument();
     });
 
+    it.each([{ theme: 'dark' }, ['dark']])(
+      'only re-renders when watched settings change from %j',
+      (settings) => {
+        const cookies = new Cookies();
+        cookies.set('settings', settings);
+        let renders = 0;
+
+        function SettingsComponent() {
+          const [values] = useCookies(['settings']);
+          renders += 1;
+          return <div>{JSON.stringify(values.settings)}</div>;
+        }
+
+        render(
+          <CookiesProvider cookies={cookies}>
+            <SettingsComponent />
+          </CookiesProvider>,
+        );
+
+        expect(screen.getByText(JSON.stringify(settings))).toBeInTheDocument();
+        expect(renders).toBe(1);
+
+        act(() => {
+          cookies.set('unrelated', 'changed');
+        });
+
+        expect(renders).toBe(1);
+
+        const updatedSettings = Array.isArray(settings)
+          ? ['light']
+          : { theme: 'light' };
+        act(() => {
+          cookies.set('settings', updatedSettings);
+        });
+
+        expect(renders).toBe(2);
+        expect(
+          screen.getByText(JSON.stringify(updatedSettings)),
+        ).toBeInTheDocument();
+      },
+    );
+
     it('does not re-render if no dependency changes', () => {
       const cookies = new Cookies();
       cookies.set('test', 'big fat cat Pacman');
